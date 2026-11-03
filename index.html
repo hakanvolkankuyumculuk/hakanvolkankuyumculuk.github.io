@@ -278,6 +278,23 @@
         }
 
 
+        /* <button> olarak kullanılan butonun tarayıcı stillerini sıfırla */
+
+        button.button {
+
+            width: 100%;
+
+            padding: 0;
+
+            font: inherit;
+
+            cursor: pointer;
+
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+
         .button:hover {
 
             transform: translateY(-2px);
@@ -383,10 +400,277 @@
 
 
         /* =====================================================
+           IBAN PENCERESİ (MODAL)
+        ===================================================== */
+
+        /* Pencere açıkken arkadaki sayfa kaymasın */
+        body:has(.iban-modal[open]) {
+
+            overflow: hidden;
+        }
+
+
+        .iban-modal {
+
+            width: min(calc(100% - 36px), 440px);
+
+            padding: 0;
+
+            background: #fffaf1;
+
+            border: 1.5px solid #c69a4c;
+
+            border-radius: 22px;
+
+            color: #3d3228;
+
+            box-shadow:
+                0 20px 50px rgba(30, 18, 6, 0.35);
+        }
+
+
+        .iban-modal[open] {
+
+            animation: modal-in 0.22s ease-out;
+        }
+
+
+        .iban-modal::backdrop {
+
+            background: rgba(30, 18, 6, 0.55);
+
+            -webkit-backdrop-filter: blur(3px);
+            backdrop-filter: blur(3px);
+        }
+
+
+        @keyframes modal-in {
+
+            from {
+                opacity: 0;
+                transform: translateY(12px) scale(0.97);
+            }
+
+            to {
+                opacity: 1;
+                transform: none;
+            }
+        }
+
+
+        /*
+            İç alan: boşluklar burada.
+            Böylece kenar dışındaki tıklama (arka plan) ayırt edilebilir.
+        */
+        .modal-body {
+
+            padding: 22px 22px 24px;
+        }
+
+
+        .modal-header {
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            margin-bottom: 18px;
+        }
+
+
+        .modal-title {
+
+            margin: 0;
+
+            font-size: 20px;
+
+            font-weight: normal;
+
+            letter-spacing: 1px;
+
+            color: #3d3228;
+        }
+
+
+        .modal-close {
+
+            width: 38px;
+            height: 38px;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            padding: 0;
+
+            background: transparent;
+
+            border: 1px solid #c7a36b;
+
+            border-radius: 50%;
+
+            color: #9c702d;
+
+            font-family: Arial, sans-serif;
+
+            font-size: 22px;
+
+            line-height: 1;
+
+            cursor: pointer;
+        }
+
+
+        .modal-close:hover {
+
+            background: #f3e7d3;
+        }
+
+
+        /* Alıcı adı ve IBAN kutuları */
+
+        .info-row {
+
+            padding: 14px 16px 16px;
+
+            background: rgba(198, 154, 76, 0.08);
+
+            border: 1px solid #e3cfa9;
+
+            border-radius: 16px;
+        }
+
+
+        .info-row + .info-row {
+
+            margin-top: 14px;
+        }
+
+
+        .info-label {
+
+            font-size: 13px;
+
+            letter-spacing: 1.5px;
+
+            text-transform: uppercase;
+
+            color: #9c702d;
+        }
+
+
+        .info-value {
+
+            margin: 6px 0 12px;
+
+            font-size: 16px;
+
+            line-height: 1.45;
+
+            /* Uzun IBAN / isim taşmasın */
+            overflow-wrap: anywhere;
+        }
+
+
+        /* IBAN tek satırda kalsın; dar ekranda yazı küçülür */
+        .info-value.iban {
+
+            font-size: clamp(13px, 4.1vw, 17px);
+
+            letter-spacing: 0.3px;
+
+            white-space: nowrap;
+        }
+
+
+        .copy-button {
+
+            width: 100%;
+
+            min-height: 46px;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            gap: 8px;
+
+            padding: 0 14px;
+
+            background: #ae7c2d;
+
+            border: none;
+
+            border-radius: 12px;
+
+            color: #fffaf1;
+
+            font: inherit;
+
+            font-size: 15px;
+
+            letter-spacing: 0.5px;
+
+            cursor: pointer;
+
+            transition: background 0.2s ease;
+        }
+
+
+        .copy-button:hover {
+
+            background: #9c702d;
+        }
+
+
+        /* Kopyalandıktan sonra kısa süre yeşil olur */
+        .copy-button.copied {
+
+            background: #5f7a3c;
+        }
+
+
+        .copy-button svg {
+
+            width: 18px;
+            height: 18px;
+
+            fill: none;
+
+            stroke: currentColor;
+
+            stroke-width: 2;
+
+            stroke-linecap: round;
+
+            stroke-linejoin: round;
+
+            flex-shrink: 0;
+        }
+
+
+        /* =====================================================
            MOBİL
         ===================================================== */
 
         @media (max-width: 420px) {
+
+            .modal-body {
+
+                padding: 18px 14px 20px;
+            }
+
+
+            .info-row {
+
+                padding: 12px 12px 14px;
+            }
+
+
 
             .container {
 
@@ -619,10 +903,257 @@
 
         </a>
 
+
+
+        <!-- IBAN -->
+
+        <button
+            class="button"
+            type="button"
+            id="ibanOpen"
+            aria-haspopup="dialog"
+        >
+
+            <div class="icon-box">
+
+                <svg class="icon" viewBox="0 0 24 24">
+
+                    <path
+                        d="M3 9.5 12 4l9 5.5"
+                    />
+
+                    <path
+                        d="M5.5 11v6.5M10 11v6.5M14 11v6.5M18.5 11v6.5"
+                    />
+
+                    <path
+                        d="M3 20h18"
+                    />
+
+                </svg>
+
+            </div>
+
+
+            <div class="separator"></div>
+
+
+            <div class="button-text">
+                IBAN
+            </div>
+
+
+            <div class="arrow">
+                ›
+            </div>
+
+        </button>
+
     </div>
 
 
 </div>
+
+
+
+<!-- =====================================================
+     IBAN PENCERESİ
+====================================================== -->
+
+<dialog
+    class="iban-modal"
+    id="ibanModal"
+    aria-labelledby="ibanTitle"
+>
+
+    <div class="modal-body">
+
+
+        <div class="modal-header">
+
+            <h2 class="modal-title" id="ibanTitle">
+                Banka Bilgileri
+            </h2>
+
+            <button
+                class="modal-close"
+                type="button"
+                id="ibanClose"
+                aria-label="Kapat"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+
+        <!-- ALICI ADI -->
+
+        <div class="info-row">
+
+            <div class="info-label">
+                Alıcı Adı
+            </div>
+
+            <div class="info-value">
+                V-H KUYUMCULUK İTHALAT İHRACAT SANAYİ VE TİC. LTD. ŞTİ.
+            </div>
+
+            <button
+                class="copy-button"
+                type="button"
+                data-copy="V-H KUYUMCULUK İTHALAT İHRACAT SANAYİ VE TİC. LTD. ŞTİ."
+                data-label="Alıcı Adını Kopyala"
+            >
+
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <rect x="9" y="9" width="11" height="11" rx="2" />
+                    <path d="M5 15V6a2 2 0 0 1 2-2h9" />
+                </svg>
+
+                <span>Alıcı Adını Kopyala</span>
+
+            </button>
+
+        </div>
+
+
+
+        <!-- IBAN -->
+
+        <div class="info-row">
+
+            <div class="info-label">
+                IBAN
+            </div>
+
+            <div class="info-value iban">
+                TR63 0006 4000 0014 2185 7311 56
+            </div>
+
+            <!--
+                Boşluksuz kopyalanır; banka uygulamaları
+                bu biçimi sorunsuz kabul eder.
+            -->
+            <button
+                class="copy-button"
+                type="button"
+                data-copy="TR630006400000142185731156"
+                data-label="IBAN Kopyala"
+            >
+
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <rect x="9" y="9" width="11" height="11" rx="2" />
+                    <path d="M5 15V6a2 2 0 0 1 2-2h9" />
+                </svg>
+
+                <span>IBAN Kopyala</span>
+
+            </button>
+
+        </div>
+
+
+    </div>
+
+</dialog>
+
+
+
+<script>
+
+    const ibanModal = document.getElementById("ibanModal");
+
+
+    document.getElementById("ibanOpen").addEventListener("click", () => {
+        ibanModal.showModal();
+    });
+
+
+    document.getElementById("ibanClose").addEventListener("click", () => {
+        ibanModal.close();
+    });
+
+
+    // Pencerenin dışına (karartılmış alana) tıklanınca kapat
+    ibanModal.addEventListener("click", (event) => {
+        if (event.target === ibanModal) {
+            ibanModal.close();
+        }
+    });
+
+
+    /*
+        Panoya kopyalama.
+        Clipboard API yoksa ya da izin vermezse
+        eski yöntemle (gizli textarea) dener.
+    */
+    function copyText(text) {
+
+        if (navigator.clipboard && window.isSecureContext) {
+            return navigator.clipboard.writeText(text)
+                .catch(() => fallbackCopy(text));
+        }
+
+        return fallbackCopy(text);
+    }
+
+
+    function fallbackCopy(text) {
+
+        return new Promise((resolve, reject) => {
+
+            const area = document.createElement("textarea");
+
+            area.value = text;
+            area.setAttribute("readonly", "");
+            area.style.position = "fixed";
+            area.style.top = "0";
+            area.style.opacity = "0";
+
+            // Modal açıkken dışarısı etkisizdir, bu yüzden içine eklenir
+            ibanModal.appendChild(area);
+
+            area.select();
+            area.setSelectionRange(0, text.length);
+
+            const ok = document.execCommand("copy");
+
+            area.remove();
+
+            ok ? resolve() : reject();
+        });
+    }
+
+
+    document.querySelectorAll(".copy-button").forEach((button) => {
+
+        const label = button.querySelector("span");
+
+        let timer;
+
+        button.addEventListener("click", () => {
+
+            copyText(button.dataset.copy)
+                .then(() => {
+                    label.textContent = "Kopyalandı ✓";
+                    button.classList.add("copied");
+                })
+                .catch(() => {
+                    label.textContent = "Kopyalanamadı";
+                })
+                .finally(() => {
+                    clearTimeout(timer);
+                    timer = setTimeout(() => {
+                        label.textContent = button.dataset.label;
+                        button.classList.remove("copied");
+                    }, 2000);
+                });
+        });
+    });
+
+</script>
 
 
 </body>
