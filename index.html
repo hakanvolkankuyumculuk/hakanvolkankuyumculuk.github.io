@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Hakan Volkan Kuyumculuk</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            /*
+                Duvarın ana tonu (fotoğraftan ölçüldü).
+                Sayfa kaydırılırken kenarda görünen renk de bu.
+            */
+            background: #765d42;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+
+            display: flex;
+            justify-content: center;
+
+            background: #765d42;
+
+            color: #3d3228;
+
+            font-family:
+                Georgia,
+                "Times New Roman",
+                serif;
+        }
+
+
+        /* =====================================================
+           DUVAR ARKA PLANI (resim dosyası yok, tamamı CSS)
+
+           3 katman:
+           1) .wall          → duvar rengi + köşe gölgeleri
+           2) .wall::before  → sıva dokusu
+           3) .wall::after   → sağ üstten vuran ışık huzmesi
+
+           Ekrana sabit durur, içerik üzerinde kayar.
+        ===================================================== */
+
+        .wall {
+
+            /*
+                Ölçek birimi: telefonda ekran genişliğine,
+                geniş ekranda yüksekliğe göre büyür.
+            */
+            --u: min(1vw, 0.82vh);
+
+            position: fixed;
+
+            top: 0;
+            left: 0;
+
+            width: 100%;
+            height: 100vh;
+            height: 100lvh;
+
+            z-index: 0;
+
+            overflow: hidden;
+
+            pointer-events: none;
+
+            background:
+                /* sağ kenara yayılan soluk ışık */
+                radial-gradient(
+                    ellipse calc(26 * var(--u)) calc(52 * var(--u)) at 100% 34%,
+                    rgba(214, 176, 131, 0.16),
+                    transparent
+                ),
+
+                /* sağ üst çeyrekteki genel aydınlık */
+                radial-gradient(
+                    ellipse calc(60 * var(--u)) calc(48 * var(--u)) at 90% 12%,
+                    rgba(214, 176, 131, 0.10),
+                    transparent
+                ),
+
+                /* sol üst köşe gölgesi */
+                radial-gradient(
+                    ellipse calc(74 * var(--u)) calc(61 * var(--u)) at 0% 0%,
+                    rgba(30, 18, 6, 0.10),
+                    transparent 70%
+                ),
+
+                /* ana duvar tonu: soldan sağa hafif açılır */
+                linear-gradient(90deg, #765d42, #7a6248);
+        }
+
+
+        /* Sıva dokusu: SVG ile üretilen, tekrarlanan desen */
+
+        .wall::before {
+
+            content: "";
+
+            position: absolute;
+
+            inset: 0;
+
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='256' height='256'%3E%3Cfilter id='f' x='-16' y='-16' width='288' height='288' filterUnits='userSpaceOnUse' color-interpolation-filters='sRGB'%3E%3CfeTurbulence type='turbulence' baseFrequency='.14' numOctaves='2' stitchTiles='stitch' x='0' y='0' width='256' height='256'/%3E%3CfeTile/%3E%3CfeDiffuseLighting surfaceScale='1.4' diffuseConstant='.87' lighting-color='%23fff'%3E%3CfeDistantLight azimuth='315' elevation='35'/%3E%3C/feDiffuseLighting%3E%3C/filter%3E%3Crect width='256' height='256' filter='url(%23f)'/%3E%3C/svg%3E");
+
+            background-size: 256px 256px;
+
+            mix-blend-mode: overlay;
+
+            /* Doku belirginliği: artırırsan sıva daha çok görünür */
+            opacity: 0.07;
+        }
+
+
+        /*
+            Işık huzmesi: sağ üst köşenin dışından
+            sol aşağıya doğru uzanan yumuşak bant.
+
+            color-dodge, altındaki duvarı gerçek ışık gibi
+            aydınlatır; dokuyu da ışıkta daha belirgin yapar.
+            Gri ne kadar açıksa ışık o kadar güçlü olur.
+        */
+
+        .wall::after {
+
+            content: "";
+
+            position: absolute;
+
+            right: calc(-7.6 * var(--u));
+            top: calc(6 * var(--u) - 21 * var(--u));
+
+            width: calc(74 * var(--u));
+            height: calc(42 * var(--u));
+
+            transform-origin: 100% 50%;
+
+            transform: rotate(-50deg);
+
+            background: linear-gradient(
+                to bottom,
+                transparent 6%,
+                rgba(112, 110, 105, 0.22) 11%,
+                rgba(112, 110, 105, 0.10) 16%,
+                rgba(112, 110, 105, 0.25) 25%,
+                rgba(112, 110, 105, 0.60) 36%,
+                rgb(112, 110, 105) 50%,
+                rgba(112, 110, 105, 0.90) 58%,
+                rgba(112, 110, 105, 0.65) 70%,
+                rgba(112, 110, 105, 0.38) 82%,
+                rgba(112, 110, 105, 0.15) 93%,
+                transparent
+            );
+
+            /* Işık, kaynaktan uzaklaştıkça söner */
+            -webkit-mask-image: linear-gradient(
+                to left,
+                #000 20%,
+                rgba(0, 0, 0, 0.60) 40%,
+                rgba(0, 0, 0, 0.25) 62%,
+                rgba(0, 0, 0, 0.08) 80%,
+                transparent 95%
+            );
+
+            mask-image: linear-gradient(
+                to left,
+                #000 20%,
+                rgba(0, 0, 0, 0.60) 40%,
+                rgba(0, 0, 0, 0.25) 62%,
+                rgba(0, 0, 0, 0.08) 80%,
+                transparent 95%
+            );
+
+            mix-blend-mode: color-dodge;
+        }
+
+
+        /* =====================================================
+           ANA SAYFA
+        ===================================================== */
+
+        .container {
+
+            width: 100%;
+            max-width: 520px;
+
+            min-height: 100vh;
+
+            position: relative;
+
+            /* Duvarın önünde durması için */
+            z-index: 1;
+
+            overflow: hidden;
+        }
+
+
+        /* =====================================================
+           LOGO
+        ===================================================== */
+
+        .logo {
+
+            display: block;
+
+            width: min(100%, 480px);
+
+            height: auto;
+
+            margin: 36px auto 26px;
+        }
+
+
+        /* =====================================================
+           BUTON ALANI
+        ===================================================== */
+
+        .buttons {
+
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 18px;
+
+            width: calc(100% - 48px);
+
+            margin-left: 24px;
+            margin-right: 24px;
+
+            /* Son butonun altında boşluk kalsın */
+            padding-bottom: 45px;
+        }
+
+
+        /* =====================================================
+           BUTON
+        ===================================================== */
+
+        .button {
+
+            position: relative;
+
+            min-height: 78px;
+
+            display: flex;
+
+            align-items: center;
+
+            text-decoration: none;
+
+            /*
+                Hafif transparan krem.
+            */
+            background: rgba(255, 250, 242, 0.94);
+
+            border: 1.5px solid #c69a4c;
+
+            border-radius: 22px;
+
+            color: #3d3228;
+
+            box-shadow:
+                0 8px 22px rgba(50, 30, 10, 0.16);
+
+            transition:
+                transform 0.2s ease,
+                background 0.2s ease,
+                box-shadow 0.2s ease;
+        }
+
+
+        .button:hover {
+
+            transform: translateY(-2px);
+
+            background: #fffaf1;
+
+            box-shadow:
+                0 12px 28px rgba(50, 30, 10, 0.20);
+        }
+
+
+        /* =====================================================
+           İKON
+        ===================================================== */
+
+        .icon-box {
+
+            width: 58px;
+            height: 58px;
+
+            margin-left: 14px;
+
+            border-radius: 50%;
+
+            background: #ae7c2d;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            flex-shrink: 0;
+        }
+
+
+        .icon {
+
+            width: 29px;
+            height: 29px;
+
+            fill: none;
+
+            stroke: #fffaf1;
+
+            stroke-width: 2;
+
+            stroke-linecap: round;
+
+            stroke-linejoin: round;
+        }
+
+
+        /* =====================================================
+           AYIRICI
+        ===================================================== */
+
+        .separator {
+
+            width: 1px;
+
+            height: 38px;
+
+            background: #c7a36b;
+
+            margin-left: 22px;
+
+            margin-right: 22px;
+        }
+
+
+        /* =====================================================
+           BUTON YAZISI
+        ===================================================== */
+
+        .button-text {
+
+            flex: 1;
+
+            text-align: left;
+
+            font-size: 18px;
+
+            letter-spacing: 1px;
+        }
+
+
+        /* =====================================================
+           OK
+        ===================================================== */
+
+        .arrow {
+
+            font-family: Arial, sans-serif;
+
+            font-size: 30px;
+
+            font-weight: 300;
+
+            color: #9c702d;
+
+            margin-right: 23px;
+        }
+
+
+        /* =====================================================
+           MOBİL
+        ===================================================== */
+
+        @media (max-width: 420px) {
+
+            .container {
+
+                max-width: 100%;
+            }
+
+
+            .buttons {
+
+                width: calc(100% - 36px);
+
+                margin-left: 18px;
+                margin-right: 18px;
+
+                gap: 15px;
+            }
+
+
+            .button {
+
+                min-height: 70px;
+
+                border-radius: 18px;
+            }
+
+
+            .icon-box {
+
+                width: 50px;
+
+                height: 50px;
+
+                margin-left: 10px;
+            }
+
+
+            .icon {
+
+                width: 25px;
+
+                height: 25px;
+            }
+
+
+            .separator {
+
+                margin-left: 15px;
+
+                margin-right: 15px;
+            }
+
+
+            .button-text {
+
+                font-size: 16px;
+            }
+
+
+            .arrow {
+
+                margin-right: 16px;
+
+                font-size: 26px;
+            }
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- Duvar arka planı (dekoratif) -->
+<div class="wall" aria-hidden="true"></div>
+
+
+<div class="container">
+
+
+    <!-- =====================================================
+         LOGO
+    ====================================================== -->
+
+    <img
+        class="logo"
+        src="logo-isikli.webp"
+        alt="Hakan Volkan Kuyumculuk"
+        width="1782"
+        height="1198"
+    >
+
+
+
+    <!-- =====================================================
+         BUTONLAR
+    ====================================================== -->
+
+    <div class="buttons">
+
+
+        <!-- KONUM -->
+
+        <a
+            class="button"
+            href="https://www.google.com/maps/place//data=!4m2!3m1!1s0x14d34e55a147fdb5:0xa214d39268bbeb31?sa=X%26ved=1t:8290%26ictx=111"
+            target="_blank"
+        >
+
+            <div class="icon-box">
+
+                <svg class="icon" viewBox="0 0 24 24">
+
+                    <path
+                        d="M12 21s7-6.2 7-12a7 7 0 1 0-14 0c0 5.8 7 12 7 12z"
+                    />
+
+                    <circle
+                        cx="12"
+                        cy="9"
+                        r="2.5"
+                    />
+
+                </svg>
+
+            </div>
+
+
+            <div class="separator"></div>
+
+
+            <div class="button-text">
+                Yol Tarifi
+            </div>
+
+
+            <div class="arrow">
+                ›
+            </div>
+
+        </a>
+
+
+
+        <!-- TELEFON -->
+
+        <a
+            class="button"
+            href="tel:+903124343229"
+        >
+
+            <div class="icon-box">
+
+                <svg class="icon" viewBox="0 0 24 24">
+
+                    <path
+                        d="M6.5 3.5l3 2.5-2 3.2c1.1 2.2 2.8 3.9 5 5l3.2-2 2.5 3c.5.6.4 1.5-.2 2l-1.5 1.1c-.8.6-1.8.8-2.7.5C7.8 17 4 13.2 3.2 7.2c-.2-.9.1-1.9.7-2.7L5 3.2c.4-.4 1-.3 1.5.3z"
+                    />
+
+                </svg>
+
+            </div>
+
+
+            <div class="separator"></div>
+
+
+            <div class="button-text">
+                (0312) 434 32 29
+            </div>
+
+
+            <div class="arrow">
+                ›
+            </div>
+
+        </a>
+
+
+
+        <!-- INSTAGRAM -->
+
+        <a
+            class="button"
+            href="https://www.instagram.com/hakanvolkanmucevherat/"
+            target="_blank"
+        >
+
+            <div class="icon-box">
+
+                <svg class="icon" viewBox="0 0 24 24">
+
+                    <rect
+                        x="3"
+                        y="3"
+                        width="18"
+                        height="18"
+                        rx="5"
+                    />
+
+                    <circle
+                        cx="12"
+                        cy="12"
+                        r="4"
+                    />
+
+                    <circle
+                        cx="17.5"
+                        cy="6.5"
+                        r="1"
+                    />
+
+                </svg>
+
+            </div>
+
+
+            <div class="separator"></div>
+
+
+            <div class="button-text">
+                Instagram
+            </div>
+
+
+            <div class="arrow">
+                ›
+            </div>
+
+        </a>
+
+    </div>
+
+
+</div>
+
+
+</body>
+</html>
