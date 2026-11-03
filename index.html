@@ -617,7 +617,10 @@
 
             cursor: pointer;
 
-            transition: background 0.2s ease;
+            transition:
+                background 0.2s ease,
+                color 0.2s ease,
+                box-shadow 0.2s ease;
         }
 
 
@@ -627,10 +630,18 @@
         }
 
 
-        /* Kopyalandıktan sonra kısa süre yeşil olur */
-        .copy-button.copied {
+        /*
+            Kopyalandıktan sonra kısa süre ters renge döner:
+            krem zemin, altın kenar ve yazı.
+        */
+        .copy-button.copied,
+        .copy-button.copied:hover {
 
-            background: #5f7a3c;
+            background: #fffaf1;
+
+            color: #9c702d;
+
+            box-shadow: inset 0 0 0 1.5px #c69a4c;
         }
 
 
@@ -988,38 +999,6 @@
 
 
 
-        <!-- ALICI ADI -->
-
-        <div class="info-row">
-
-            <div class="info-label">
-                Alıcı Adı
-            </div>
-
-            <div class="info-value">
-                V-H KUYUMCULUK İTHALAT İHRACAT SANAYİ VE TİC. LTD. ŞTİ.
-            </div>
-
-            <button
-                class="copy-button"
-                type="button"
-                data-copy="V-H KUYUMCULUK İTHALAT İHRACAT SANAYİ VE TİC. LTD. ŞTİ."
-                data-label="Alıcı Adını Kopyala"
-            >
-
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                    <rect x="9" y="9" width="11" height="11" rx="2" />
-                    <path d="M5 15V6a2 2 0 0 1 2-2h9" />
-                </svg>
-
-                <span>Alıcı Adını Kopyala</span>
-
-            </button>
-
-        </div>
-
-
-
         <!-- IBAN -->
 
         <div class="info-row">
@@ -1049,6 +1028,38 @@
                 </svg>
 
                 <span>IBAN Kopyala</span>
+
+            </button>
+
+        </div>
+
+
+
+        <!-- ALICI ADI -->
+
+        <div class="info-row">
+
+            <div class="info-label">
+                Alıcı Adı
+            </div>
+
+            <div class="info-value">
+                V-H KUYUMCULUK İTHALAT İHRACAT SANAYİ VE TİC. LTD. ŞTİ.
+            </div>
+
+            <button
+                class="copy-button"
+                type="button"
+                data-copy="V-H KUYUMCULUK İTHALAT İHRACAT SANAYİ VE TİC. LTD. ŞTİ."
+                data-label="Alıcı Adını Kopyala"
+            >
+
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <rect x="9" y="9" width="11" height="11" rx="2" />
+                    <path d="M5 15V6a2 2 0 0 1 2-2h9" />
+                </svg>
+
+                <span>Alıcı Adını Kopyala</span>
 
             </button>
 
